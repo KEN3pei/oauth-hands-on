@@ -1,0 +1,73 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.1'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id "org.jooq.jooq-codegen-gradle" version "3.19.1"
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// https://mvnrepository.com/artifact/org.jooq/jooq
+	implementation 'org.jooq:jooq:3.19.1'
+	// https://mvnrepository.com/artifact/org.jooq/jooq-meta
+	implementation 'org.jooq:jooq-meta:3.19.1'
+	// https://mvnrepository.com/artifact/org.jooq.jooq-codegen-gradle/org.jooq.jooq-codegen-gradle.gradle.plugin
+	implementation 'org.jooq.jooq-codegen-gradle:org.jooq.jooq-codegen-gradle.gradle.plugin:3.19.1'
+	
+	// https://www.satoryu.com/blog/2022/12/07/setup-for-spring-boot-with-jooq.html
+	implementation 'org.springframework.boot:spring-boot-starter-jooq'
+	
+	// 8.x以前：「com.mysql.jdbc.Driver」
+	// 8.x:「com.mysql.cj.jdbc.Driver」
+	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
+	// https://github.com/monosoul/jooq-gradle-plugin#configuration-with-properties
+	jooqCodegen 'com.mysql:mysql-connector-j:8.1.0'
+	implementation 'com.mysql:mysql-connector-j:8.1.0'
+	
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//  Temporary explicit version to fix Thymeleaf bug
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+jooq {
+	version = '3.19.1'
+    configuration {
+		jdbc {
+			driver = "com.mysql.cj.jdbc.Driver"
+			url = "jdbc:mysql://host.docker.internal:3307/oauth_db?protocol=tcp"
+			user = "user"
+			password = "password"
+		}
+		generator {
+			database {
+				name = "org.jooq.meta.mysql.MySQLDatabase"
+				inputSchema = "oauth_db"
+				includes = ".*"
+				excludes = ""
+			}
+			target {
+				packageName = "com.example.authorization_server.jooq"
+				directory = "src/main/java/com/example/authorization_server/jooq"
+			}
+		}
+	}	
+        
+}
