@@ -107,6 +107,8 @@ CRUD機能を持つ
 
 ## コンテナ起動
 
-docker network create local-bridge-mysql
-docker compose up -d
+```shell
+$ docker network create local-bridge-mysql
+$ docker compose up -d
+```
 
