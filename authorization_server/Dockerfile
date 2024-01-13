@@ -1,7 +1,7 @@
 # 参照(https://www.baeldung.com/spring-docker-liberica)
 FROM bellsoft/liberica-runtime-container:jdk-17-glibc AS build
 # openjdk:17だとxargs is not availableとかいうエラーが出る
-COPY --chown=gradle:gradle ./ /home/gradle/src/
+COPY ./ /home/gradle/src/
 WORKDIR /home/gradle/src
 RUN ./gradlew build --stacktrace
 

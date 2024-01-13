@@ -76,4 +76,7 @@ $ aws secretsmanager get-secret-value --secret-id sbcntr-bastion-github-key-2024
     | jq -r .SecretString > ~/.ssh/github_key
 $ chmod 600 ~/.ssh/github_key
 $ ssh -T git@github.com
+$ sudo yum -y install docker
+$ sudo systemctl start docker
+$ sudo chmod 666 /var/run/docker.sock
 ```
