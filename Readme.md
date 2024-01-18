@@ -81,6 +81,10 @@ MySQLを使用する。
 
 JOOQ（ジューク）
 
+TODO:JOOQで生成したコードはgit管理すべきではない
+- https://nabedge.mixer2.org/2019/03/jooq-flyway-sample.html
+- Flywayで別プロジェクトに分けて将来的には管理する。
+
 ### client（clientサーバ）
 
 テンプレートエンジンのThymeleafを使用する。

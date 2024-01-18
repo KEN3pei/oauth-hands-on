@@ -12,6 +12,14 @@ MySQLコンテナを立ち上げた状態で実行。
 
 ./gradlew bootRun
 
+### JOOQのコード生成タスクのみ実行
+
+./gradlew jooqCodegen -PdbHost="127.0.0.1"
+
+### JOOQのコード生成タスクのみ除外してbuild
+
+./gradlew build -x jooqCodegen
+
 ### image作成
 
-`docker image build -t sbcntr-authorization-server:v1 .`
+`docker image build -t authorization-server:v1 .`
