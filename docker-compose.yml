@@ -26,6 +26,12 @@ services:
       - local-bridge-mysql
     depends_on: 
       - mysql
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=oauth_db
+      - DB_USER=user
+      - DB_PASSWORD=password
   
   # protected_resource:
   #   container_name: protected_resource
