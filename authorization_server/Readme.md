@@ -4,10 +4,14 @@ gradle wrapper --gradle-version 8.4
 
 ### ビルド
 
-TODO: localではlocalhost、コンテナ上ではhost.docker.internalをホストにした上で以下ビルドコマンドを叩かないといけないのを治す。
+MySQLコンテナを立ち上げた状態で実行。
 
 ./gradlew build
 
-### 実行
+### Local実行
 
 ./gradlew bootRun
+
+### image作成
+
+`docker image build -t sbcntr-authorization-server:v1 .`

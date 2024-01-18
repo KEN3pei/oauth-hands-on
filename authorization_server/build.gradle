@@ -50,9 +50,10 @@ tasks.named('test') {
 jooq {
 	version = '3.19.1'
     configuration {
+		// host -> container mysql
 		jdbc {
 			driver = "com.mysql.cj.jdbc.Driver"
-			url = "jdbc:mysql://host.docker.internal:3307/oauth_db?protocol=tcp"
+			url = "jdbc:mysql://127.0.0.1:3306/oauth_db?protocol=tcp"
 			user = "user"
 			password = "password"
 		}
