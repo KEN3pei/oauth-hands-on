@@ -14,7 +14,7 @@ MySQLコンテナを立ち上げた状態で実行。
 
 ### JOOQのコード生成タスクのみ実行
 
-./gradlew jooqCodegen -PdbHost="127.0.0.1"
+./gradlew jooqCodegen -Pdb="dbHost dbUser dbPass"
 
 ### JOOQのコード生成タスクのみ除外してbuild
 

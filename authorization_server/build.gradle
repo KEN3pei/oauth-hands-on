@@ -40,15 +40,21 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// -Pdb="dbHost dbUser dbPass"
+def db = project.db.split('\\s+')
+def dbHost = db[0]
+def dbUser = db[1]
+def dbPass = db[2]
+
 // task:jooqCodegen
 jooq {
 	version = '3.19.1'
     configuration {
 		jdbc {
 			driver = "com.mysql.cj.jdbc.Driver"
-			url = "jdbc:mysql://${project.dbHost}:3306/oauth_db?protocol=tcp"
-			user = "user"
-			password = "password"
+			url = "jdbc:mysql://${dbHost}:3306/oauth_db?protocol=tcp"
+			user = dbUser
+			password = dbPass
 		}
 		generator {
 			database {
