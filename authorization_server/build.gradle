@@ -17,23 +17,16 @@ repositories {
 }
 
 dependencies {
-	// https://mvnrepository.com/artifact/org.jooq/jooq
 	implementation 'org.jooq:jooq:3.19.1'
-	// https://mvnrepository.com/artifact/org.jooq/jooq-meta
 	implementation 'org.jooq:jooq-meta:3.19.1'
-	// https://mvnrepository.com/artifact/org.jooq.jooq-codegen-gradle/org.jooq.jooq-codegen-gradle.gradle.plugin
 	implementation 'org.jooq.jooq-codegen-gradle:org.jooq.jooq-codegen-gradle.gradle.plugin:3.19.1'
-	
-	// https://www.satoryu.com/blog/2022/12/07/setup-for-spring-boot-with-jooq.html
 	implementation 'org.springframework.boot:spring-boot-starter-jooq'
-	
 	// 8.x以前：「com.mysql.jdbc.Driver」
 	// 8.x:「com.mysql.cj.jdbc.Driver」
 	// https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
 	// https://github.com/monosoul/jooq-gradle-plugin#configuration-with-properties
 	jooqCodegen 'com.mysql:mysql-connector-j:8.1.0'
 	implementation 'com.mysql:mysql-connector-j:8.1.0'
-	
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -47,13 +40,13 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// task:jooqCodegen
 jooq {
 	version = '3.19.1'
     configuration {
-		// host -> container mysql
 		jdbc {
 			driver = "com.mysql.cj.jdbc.Driver"
-			url = "jdbc:mysql://127.0.0.1:3306/oauth_db?protocol=tcp"
+			url = "jdbc:mysql://${project.dbHost}:3306/oauth_db?protocol=tcp"
 			user = "user"
 			password = "password"
 		}
@@ -70,5 +63,4 @@ jooq {
 			}
 		}
 	}	
-        
 }
