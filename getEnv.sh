@@ -3,15 +3,12 @@
 aws secretsmanager get-secret-value --secret-id sbcntr/mysql \
 | jq -r .SecretString \
 | { read ss ; \
-    echo -e "$ss"| DB_USERNAME="$(jq -r .username)"; \
-    echo -e "$ss"| DB_PASSWORD="$(jq -r .password)"; \
-    echo -e "$ss"| DB_CLIENT="$(jq -r .engine)"; \
-    echo -e "$ss"| DB_HOST="$(jq -r .host)"; \
-    echo -e "$ss"| DB_PORT="$(jq -r .port)"; \
-}
+    # exportで書き込みたかったが子プロセスから設定するスマートな方法がなかった
+    echo -e "$ss"| echo DB_USER="$(jq -r .username)"; \
+    echo -e "$ss"| echo DB_PASSWORD="$(jq -r .password)"; \
+    echo -e "$ss"| echo DB_CLIENT="$(jq -r .engine)"; \
+    echo -e "$ss"| echo DB_HOST="$(jq -r .host)"; \
+    echo -e "$ss"| echo DB_PORT="$(jq -r .port)"; \
+    echo -e "$ss"| echo DB_NAME="oauth_db"; \
+} | sudo tee /etc/environment > /dev/null
 
-echo $DB_USERNAME
-echo $DB_PASSWORD
-echo $DB_CLIENT
-echo $DB_HOST
-echo $DB_PORT
