@@ -21,7 +21,7 @@ services:
     platform: linux/x86_64
     build: ./authorization_server/
     ports:
-      - 8080:8080
+      - 80:80
     networks:
       - local-bridge-mysql
     depends_on: 
