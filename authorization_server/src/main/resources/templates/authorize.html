@@ -1,12 +1,62 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>OAuth in Action: OAuth Authorization Server</title>
+    
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <style>
+        body {
+          padding-top: 60px;
+        }
+        .navbar-inverse {
+            background-color: #322;
+        }
+        </style>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+      </head>
 </head>
 <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">OAuth in Action: <span class="label label-danger">OAuth Authorization Server</span></a>
+          </div>
+        </div>
+      </nav>
+    
     <div>
-        <h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
+        <p><b>client_id:</b> <code th:text="${client_id}"></code></p>
+        <p><b>redirect_uri:</b> <code th:text="${redirect_uri}"></code></p>
+
+        <form class="form" action="/approve" method="POST">
+            <input type="hidden" name="reqid" th:text="${reqid}">
+            <p>The client is requesting access to the following:</p>
+            <ul>
+                <th:block th:each="scope : ${scopes}">
+                    <li>
+                        <label th:for="'scope_' + ${scope}" th:text="'scope_' + ${scope}"></label>
+                        <input type="checkbox" th:name="${scope}" checked="checked">
+                    </li>
+                </th:block>
+            </ul>
+            <input type="submit" class="btn btn-success" name="approve" value="Approve">
+            <input type="submit" class="btn btn-danger" name="deny" value="Deny">
+        </form>
+    </div>
+
+    <div>
         <form th:action="@{/logout}" method="post">
             <input type="submit" value="Sign Out"/>
         </form>

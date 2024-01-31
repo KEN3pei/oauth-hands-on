@@ -1,20 +1,35 @@
 package com.example.authorization_server.controllers;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
 
 @Controller
 public class AuthorizeController {
 
     // 認証が必須のEndpointとする
     @GetMapping("/authorize")
-    public String authorizeEndpoint() {
+    public String authorizeEndpoint(Model model) {
         // 1.Clientをclient_idで取得
         // 2.redirect_uriの検証
         // 3.scopeを半角で配列に分割「"foo bar"」->["foo","bar"]
         // 4.リクエストされたscopeの範囲がClientの範囲を超えていないかチェック
         // 5.request queryをDBに保存
+        Map<String, Object> client = new HashMap<>();
+        client.put("client_id", "oauth-client-1");
+        client.put("client_secret", "oauth-client-secret-1");
+        client.put("redirect_uri", "http://localhost:9000/callback");
+        List<String> scopes = Arrays.asList("foo", "bar");
+        client.put("scopes", scopes);
+        client.put("reqid", "reqid");
+
+        model.addAllAttributes(client);
         return "authorize";
         /* 6.以下を含めてviewで返す
          * {
