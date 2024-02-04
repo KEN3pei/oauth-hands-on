@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <head>
-        <meta charset="utf-8">
+        <!-- <meta charset="utf-8"> -->
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <title>OAuth in Action: OAuth Authorization Server</title>
+        <!-- <title>OAuth in Action: OAuth Authorization Server</title> -->
     
         <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <style>
         body {
           padding-top: 60px;
@@ -17,7 +17,7 @@
         .navbar-inverse {
             background-color: #322;
         }
-        </style>
+        </style> -->
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -36,7 +36,7 @@
         </div>
       </nav>
     
-    <div>
+    <!-- <div>
         <p><b>client_id:</b> <code th:text="${client_id}"></code></p>
         <p><b>redirect_uri:</b> <code th:text="${redirect_uri}"></code></p>
 
@@ -54,7 +54,7 @@
             <input type="submit" class="btn btn-success" name="approve" value="Approve">
             <input type="submit" class="btn btn-danger" name="deny" value="Deny">
         </form>
-    </div>
+    </div> -->
 
     <div>
       <h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
