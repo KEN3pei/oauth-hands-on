@@ -23,6 +23,8 @@ oauth(root)
 
 MySQLを使用する。
 
+`create database oauth_db;`
+
 必要な情報
 - OAuthクライアント情報テーブル
   - リダイレクトURL
@@ -34,7 +36,7 @@ MySQLを使用する。
 	"client_id": "oauth-client-1",
 	"client_secret": "oauth-client-secret-1",
 	"redirect_uris": ["http://localhost:9000/callback"],
-  "scope": "update index"
+  "scope": "random strings"
 }
 ```
 

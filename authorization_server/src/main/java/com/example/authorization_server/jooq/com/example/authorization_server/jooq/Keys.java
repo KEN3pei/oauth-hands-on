@@ -4,7 +4,15 @@
 package com.example.authorization_server.jooq;
 
 
+import com.example.authorization_server.jooq.tables.Clients;
+import com.example.authorization_server.jooq.tables.Codes;
+import com.example.authorization_server.jooq.tables.Requests;
+import com.example.authorization_server.jooq.tables.Token;
 import com.example.authorization_server.jooq.tables.Users;
+import com.example.authorization_server.jooq.tables.records.ClientsRecord;
+import com.example.authorization_server.jooq.tables.records.CodesRecord;
+import com.example.authorization_server.jooq.tables.records.RequestsRecord;
+import com.example.authorization_server.jooq.tables.records.TokenRecord;
 import com.example.authorization_server.jooq.tables.records.UsersRecord;
 
 import org.jooq.TableField;
@@ -24,6 +32,10 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ClientsRecord> KEY_CLIENTS_PRIMARY = Internal.createUniqueKey(Clients.CLIENTS, DSL.name("KEY_clients_PRIMARY"), new TableField[] { Clients.CLIENTS.CLIENT_ID }, true);
+    public static final UniqueKey<CodesRecord> KEY_CODES_PRIMARY = Internal.createUniqueKey(Codes.CODES, DSL.name("KEY_codes_PRIMARY"), new TableField[] { Codes.CODES.CODE }, true);
+    public static final UniqueKey<RequestsRecord> KEY_REQUESTS_PRIMARY = Internal.createUniqueKey(Requests.REQUESTS, DSL.name("KEY_requests_PRIMARY"), new TableField[] { Requests.REQUESTS.REQ_ID }, true);
+    public static final UniqueKey<TokenRecord> KEY_TOKEN_PRIMARY = Internal.createUniqueKey(Token.TOKEN, DSL.name("KEY_token_PRIMARY"), new TableField[] { Token.TOKEN.ACCESS_TOKEN }, true);
     public static final UniqueKey<UsersRecord> KEY_USERS_EMAIL = Internal.createUniqueKey(Users.USERS, DSL.name("KEY_users_email"), new TableField[] { Users.USERS.EMAIL }, true);
     public static final UniqueKey<UsersRecord> KEY_USERS_PRIMARY = Internal.createUniqueKey(Users.USERS, DSL.name("KEY_users_PRIMARY"), new TableField[] { Users.USERS.ID }, true);
 }

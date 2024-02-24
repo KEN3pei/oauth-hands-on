@@ -4,6 +4,10 @@
 package com.example.authorization_server.jooq;
 
 
+import com.example.authorization_server.jooq.tables.Clients;
+import com.example.authorization_server.jooq.tables.Codes;
+import com.example.authorization_server.jooq.tables.Requests;
+import com.example.authorization_server.jooq.tables.Token;
 import com.example.authorization_server.jooq.tables.Users;
 
 import java.util.Arrays;
@@ -28,6 +32,26 @@ public class OauthDb extends SchemaImpl {
     public static final OauthDb OAUTH_DB = new OauthDb();
 
     /**
+     * The table <code>oauth_db.clients</code>.
+     */
+    public final Clients CLIENTS = Clients.CLIENTS;
+
+    /**
+     * The table <code>oauth_db.codes</code>.
+     */
+    public final Codes CODES = Codes.CODES;
+
+    /**
+     * The table <code>oauth_db.requests</code>.
+     */
+    public final Requests REQUESTS = Requests.REQUESTS;
+
+    /**
+     * The table <code>oauth_db.token</code>.
+     */
+    public final Token TOKEN = Token.TOKEN;
+
+    /**
      * The table <code>oauth_db.users</code>.
      */
     public final Users USERS = Users.USERS;
@@ -48,6 +72,10 @@ public class OauthDb extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            Clients.CLIENTS,
+            Codes.CODES,
+            Requests.REQUESTS,
+            Token.TOKEN,
             Users.USERS
         );
     }
