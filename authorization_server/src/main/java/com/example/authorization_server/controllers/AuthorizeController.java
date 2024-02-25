@@ -2,29 +2,42 @@ package com.example.authorization_server.controllers;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.authorization_server.controllers.requests.AuthorizeRequest;
+import com.example.authorization_server.controllers.requests.ClientAuthRequest;
+import com.example.authorization_server.controllers.requests.TokenRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class AuthorizeController {
 
     // 認証が必須のEndpointとする
     @GetMapping("/authorize")
-    public String authorizeEndpoint(Model model) {
+    public String authorizeEndpoint(@RequestParam Map<String, String> params, Model model) {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthorizeRequest request = mapper.convertValue(params, AuthorizeRequest.class);
         // 1.Clientをclient_idで取得
         // 2.redirect_uriの検証
         // 3.scopeを半角で配列に分割「"foo bar"」->["foo","bar"]
         // 4.リクエストされたscopeの範囲がClientの範囲を超えていないかチェック
         // 5.request queryをDBに保存
+        System.out.println(request.getClientId());
+        System.out.println(request.getClientSecret());
+        System.out.println(request.getRedirectUri());
+
         Map<String, Object> client = new HashMap<>();
-        client.put("client_id", "oauth-client-1");
-        client.put("client_secret", "oauth-client-secret-1");
-        client.put("redirect_uri", "http://localhost:9000/callback");
+        client.put("client_id", request.getClientId());
+        client.put("client_secret", request.getClientSecret());
+        client.put("redirect_uri", request.getRedirectUri());
         List<String> scopes = Arrays.asList("foo", "bar");
         client.put("scopes", scopes);
         client.put("reqid", "reqid");
@@ -46,7 +59,7 @@ public class AuthorizeController {
 
     //クライアントに認可コードを返すエンドポイント
     @PostMapping("/approve")
-    public String clientAuthEndpoint() {
+    public String clientAuthEndpoint(@RequestBody ClientAuthRequest request) {
         // 1.req_idを確認してcsrf攻撃の可能性がないかチェック（requestsテーブルをreq_idで検索）
         // 2.approveされたかのチェック（denyならcallbackにエラーを返す）
         // 3.認可コードタイプかチェック（type=code以外ならcallbackにエラーを返す）
@@ -57,7 +70,7 @@ public class AuthorizeController {
 
     // バックチャネルでクライアントから叩かれるトークン生成エンドポイント
     @PostMapping("/token")
-    public String tokenEndpoint() {
+    public String tokenEndpoint(@RequestBody TokenRequest request) {
         // 1.Basic認証で渡されたHeader内のIDとPaswordを取得（client_idとclient_secretをHeaderから取得）
         // 2.bodyとheaderの両方にCredencialが含まれていないかチェック（両方あれば401を返す）
         // 3.client_idでclientテーブルから検索（一致するものがなければ401を返す）
