@@ -3,10 +3,10 @@ package com.example.authorization_server.infrastructure.request;
 import static com.example.authorization_server.jooq.Tables.REQUESTS;
 
 import org.jooq.DSLContext;
+import org.jooq.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.example.authorization_server.jooq.tables.Requests;
 import com.example.authorization_server.jooq.tables.records.RequestsRecord;
 
 @Repository
@@ -30,10 +30,10 @@ public class RequestRepository implements RequestRepositoryInterface {
         }
     }
 
-    public void save(Requests request)
+    public void save(String reqId, JSON reqJson)
     {
         create.insertInto(REQUESTS, REQUESTS.REQ_ID, REQUESTS.QUERY)
-            .values(request.REQ_ID, request.QUERY)
+            .values(reqId, reqJson)
             .execute();
     }
 

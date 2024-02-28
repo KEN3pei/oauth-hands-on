@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,41 +18,57 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.authorization_server.controllers.requests.AuthorizeRequest;
 import com.example.authorization_server.controllers.requests.ClientAuthRequest;
 import com.example.authorization_server.controllers.requests.TokenRequest;
+import com.example.authorization_server.jooq.tables.records.ClientsRecord;
+import com.example.authorization_server.services.AuthorizeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class AuthorizeController {
 
+    private final AuthorizeService authorizeService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    public AuthorizeController(
+        AuthorizeService authorizeService
+    ){
+        this.authorizeService = authorizeService;
+    }
+
     // 認証が必須のEndpointとする
     @GetMapping("/authorize")
     public String authorizeEndpoint(@RequestParam Map<String, String> params, Model model) {
-        ObjectMapper mapper = new ObjectMapper();
-        AuthorizeRequest request = mapper.convertValue(params, AuthorizeRequest.class);
-        // 1.Clientをclient_idで取得
-        // 2.redirect_uriの検証
-        // 3.scopeを半角で配列に分割「"foo bar"」->["foo","bar"]
-        // 4.リクエストされたscopeの範囲がClientの範囲を超えていないかチェック
-        // 5.request queryをDBに保存
-        System.out.println(request.getClientId());
-        System.out.println(request.getClientSecret());
-        System.out.println(request.getRedirectUri());
+        try {
+            logger.info("START GET /authorize");
 
-        Map<String, Object> client = new HashMap<>();
-        client.put("client_id", request.getClientId());
-        client.put("client_secret", request.getClientSecret());
-        client.put("redirect_uri", request.getRedirectUri());
-        List<String> scopes = Arrays.asList("foo", "bar");
-        client.put("scopes", scopes);
-        client.put("reqid", "reqid");
+            ObjectMapper mapper = new ObjectMapper();
+            AuthorizeRequest request = mapper.convertValue(params, AuthorizeRequest.class);
 
-        model.addAllAttributes(client);
-        return "authorize";
-        /* 6.以下を含めてviewで返す
+            Object[] res = this.authorizeService.execute(request);
+
+            ClientsRecord clientRecord = (ClientsRecord)res[0];
+            String reqId = (String)res[1];
+            String scope = (String)res[2];
+
+            Map<String, Object> client = new HashMap<>();
+            client.put("client_id", request.getClientId());
+            client.put("client_secret", request.getClientSecret());
+            client.put("redirect_uri", request.getRedirectUri());
+            List<String> scopes = Arrays.asList("foo", "bar");
+            client.put("scopes", scopes);
+            client.put("reqid", reqId);
+
+            model.addAllAttributes(client);
+            return "authorize";
+
+        }catch(Exception e){
+            return "400";
+        }
+        /* responseの例
          * {
-         *    // リソース所有者がどのクライアントを承認するか判断するためにViewに渡す
          *    "client_id": "oauth-client-1",
          *    "client_secret": "oauth-client-secret-1",
-         *    "redirect_uris": ["http://localhost:9000/callback"],
+         *    "redirect_uris": "http://localhost:9000/callback",
          *    "scope": "foo bar"
          *    // formのhiddenに含めてcsrf対策に使用する
          *    "reqid": "reqid"
