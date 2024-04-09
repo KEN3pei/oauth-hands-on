@@ -11,14 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.authorization_server.controllers.requests.AuthorizeRequest;
-import com.example.authorization_server.controllers.requests.ClientAuthRequest;
+import com.example.authorization_server.controllers.requests.ClientAuthFormRequest;
 import com.example.authorization_server.controllers.requests.TokenRequest;
 import com.example.authorization_server.jooq.tables.records.ClientsRecord;
+import com.example.authorization_server.services.ApproveService;
 import com.example.authorization_server.services.AuthorizeService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -26,13 +29,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AuthorizeController {
 
     private final AuthorizeService authorizeService;
+    private final ApproveService approveService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public AuthorizeController(
-        AuthorizeService authorizeService
+        AuthorizeService authorizeService,
+        ApproveService approveService
     ){
         this.authorizeService = authorizeService;
+        this.approveService = approveService;
     }
 
     // 認証が必須のEndpointとする
@@ -56,12 +62,14 @@ public class AuthorizeController {
             client.put("redirect_uri", request.getRedirectUri());
             List<String> scopes = Arrays.asList("foo", "bar");
             client.put("scopes", scopes);
-            client.put("reqid", reqId);
+            client.put("reqId", reqId);
 
             model.addAllAttributes(client);
             return "authorize";
 
         }catch(Exception e){
+            e.printStackTrace();
+            logger.info("400 ERROR GET /authorize");
             return "400";
         }
         /* responseの例
@@ -78,13 +86,32 @@ public class AuthorizeController {
 
     //クライアントに認可コードを返すエンドポイント
     @PostMapping("/approve")
-    public String clientAuthEndpoint(@RequestBody ClientAuthRequest request) {
-        // 1.req_idを確認してcsrf攻撃の可能性がないかチェック（requestsテーブルをreq_idで検索）
-        // 2.approveされたかのチェック（denyならcallbackにエラーを返す）
-        // 3.認可コードタイプかチェック（type=code以外ならcallbackにエラーを返す）
-        // 4.認可コード生成＆保存（認可コードをキーにしてリクエストQueryを保存）
-        // 5.認可コードとstateを付与して、/callbackにリダイレクト
-        return "redirect";
+    public String clientAuthEndpoint(@ModelAttribute ClientAuthFormRequest form, RedirectAttributes redirectAttributes) {
+        try {
+            logger.info("START POST /approve");
+            logger.info(form.getApprove());
+            logger.info(form.getReqId());
+            String[] scopes = form.getScope();
+            for(int i = 0; i < scopes.length ; i++){
+                logger.info(scopes[i]);
+            }
+
+            Object[] res = this.approveService.execute(form);
+            String code = (String)res[1];
+            Map<String, String> query = (Map<String, String>)res[2];
+
+            Map<String, String> params = new HashMap<String, String>(){
+                {
+                    put("code", code);
+                    put("state", query.get("state"));
+                }
+            };
+            redirectAttributes.addAllAttributes(params);
+            return "redirect:"+query.get("redirect_uri");
+        }catch(Exception e){
+            e.printStackTrace();
+            return "400";
+        }
     }
 
     // バックチャネルでクライアントから叩かれるトークン生成エンドポイント

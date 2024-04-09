@@ -2,6 +2,7 @@ package com.example.authorization_server.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jooq.JSON;
 import org.slf4j.Logger;
@@ -34,7 +35,16 @@ public class AuthorizeService {
     }
 
     public Object[] execute(AuthorizeRequest request) throws Exception {
-        ClientsRecord client = clientRepository.findByClientId(request.getClientId());
+        Optional<ClientsRecord> optClient = clientRepository.findByClientId(request.getClientId());
+        ClientsRecord client;
+        if (optClient.isPresent()){
+            // nullでない場合
+            client = optClient.get();
+        } else {
+            // nullの場合
+            throw new Exception("client is not found");
+        }
+
         String requestRedirectUri = request.getRedirectUri();
         String clientRedirectUri = client.getRedirectUri();
 

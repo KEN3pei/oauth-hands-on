@@ -3,10 +3,10 @@ package com.example.authorization_server.infrastructure.code;
 import static com.example.authorization_server.jooq.Tables.CODES;
 
 import org.jooq.DSLContext;
+import org.jooq.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.example.authorization_server.jooq.tables.Codes;
 import com.example.authorization_server.jooq.tables.records.CodesRecord;
 
 @Repository
@@ -30,10 +30,10 @@ public class CodeRepository implements CodeRepositoryInterface{
         }
     }
 
-    public void save(Codes codes)
+    public void save(String code, JSON query)
     {
         create.insertInto(CODES, CODES.CODE, CODES.QUERY)
-            .values(codes.CODE, codes.QUERY)
+            .values(code, query)
             .execute();
     }
 

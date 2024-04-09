@@ -77,6 +77,7 @@ MySQLを使用する。
   INSERT INTO users(id, email, introduce, password)
   VALUES("1", "test1@example.com", "testtest", "$2a$08$5GJh.woO8kmlrkBLEhxL1uAe1ejsp8Sp.li.TTAIa9zP45tLbhNp6");
   -- https://toolbase.cc/text/bcrypt
+  -- password=password
   ```
 
 ### ORM

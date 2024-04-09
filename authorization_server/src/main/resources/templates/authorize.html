@@ -40,14 +40,14 @@
         <p><b>client_id:</b> <code th:text="${client_id}"></code></p>
         <p><b>redirect_uri:</b> <code th:text="${redirect_uri}"></code></p>
 
-        <form class="form" action="@{/approve}" method="POST">
-            <input type="hidden" name="reqid" th:text="${reqid}">
+        <form class="form" th:action="@{/approve}" method="POST">
+            <b>reqId:</b><input type="hidden" name="reqId" th:text="${reqId}" th:value="${reqId}">
             <p>The client is requesting access to the following:</p>
             <ul>
                 <th:block th:each="scope : ${scopes}">
                     <li>
-                        <label th:for="'scope_' + ${scope}" th:text="'scope_' + ${scope}"></label>
-                        <input type="checkbox" th:name="${scope}" checked="checked">
+                        <label th:for="${scope}" th:text="${scope}"></label>
+                        <input type="checkbox" name="scope" th:value="${scope}" checked="checked">
                     </li>
                 </th:block>
             </ul>
