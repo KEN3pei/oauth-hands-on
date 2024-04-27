@@ -1,4 +1,4 @@
-package com.example.authorization_server.infrastructure;
+package com.example.authorization_server.infrastructure.user;
 
 import static com.example.authorization_server.jooq.Tables.USERS;
 
@@ -21,7 +21,6 @@ public class UserRepository implements UserRepositoryInterface {
         this.create = dslContext;
     }
 
-    @Override
     public UsersRecord findByEmail(String email) {
         try {
             UsersRecord userRecord = create.selectFrom(USERS)
@@ -33,13 +32,11 @@ public class UserRepository implements UserRepositoryInterface {
         }
     }
 
-    @Override
     public UsersRecord save(Users users) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'save'");
     }
 
-    @Override
     public List<UsersRecord> findAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");

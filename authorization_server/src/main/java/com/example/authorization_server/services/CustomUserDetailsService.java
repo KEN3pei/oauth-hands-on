@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.authorization_server.infrastructure.UserRepositoryInterface;
+import com.example.authorization_server.infrastructure.user.UserRepositoryInterface;
 import com.example.authorization_server.jooq.tables.records.UsersRecord;
 
 @Service

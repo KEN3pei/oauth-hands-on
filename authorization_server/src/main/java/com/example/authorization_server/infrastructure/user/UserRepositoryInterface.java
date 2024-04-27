@@ -1,4 +1,4 @@
-package com.example.authorization_server.infrastructure;
+package com.example.authorization_server.infrastructure.user;
 
 import java.util.List;
 
