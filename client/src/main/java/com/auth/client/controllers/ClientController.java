@@ -25,9 +25,10 @@ public class ClientController {
         logger.info("START: GET /authorize");
         URI uri = UriComponentsBuilder.newInstance()
                         .queryParam("response_type", "code")
-                        .queryParam("client_id", "oauth-client-1")
-                        .queryParam("redirect_uri", "http://localhost:8000/authorize")
-                        .queryParam("state", "openid profile")
+                        .queryParam("client_id","1")
+                        .queryParam("client_secret", "password")
+                        .queryParam("redirect_uri", "http://localhost:8002/callback")
+                        .queryParam("state", "2aljs8")
                         .build()
                         .encode()
                         .toUri();

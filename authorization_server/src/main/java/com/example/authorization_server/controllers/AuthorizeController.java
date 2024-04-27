@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -49,7 +50,8 @@ public class AuthorizeController {
 
             ObjectMapper mapper = new ObjectMapper();
             AuthorizeRequest request = mapper.convertValue(params, AuthorizeRequest.class);
-
+            logger.info("MAPPED REQUEST: ", request);
+            
             Object[] res = this.authorizeService.execute(request);
 
             ClientsRecord clientRecord = (ClientsRecord)res[0];
@@ -64,7 +66,7 @@ public class AuthorizeController {
             client.put("scopes", scopes);
             client.put("reqId", reqId);
 
-            model.addAllAttributes(client);
+            model.addAllAttributes(client);//ResponseクラスとClientドメインが必要そう
             return "authorize";
 
         }catch(Exception e){
@@ -116,8 +118,12 @@ public class AuthorizeController {
 
     // バックチャネルでクライアントから叩かれるトークン生成エンドポイント
     @PostMapping("/token")
-    public String tokenEndpoint(@RequestBody TokenRequest request) {
+    public String tokenEndpoint(@RequestBody TokenRequest request, @RequestHeader("Authorization") String auth) {
         // 1.Basic認証で渡されたHeader内のIDとPaswordを取得（client_idとclient_secretをHeaderから取得）
+        // 「basic client_id:client_secret」から「client_id:client_secret」を切り出す
+        String clientCredential = auth.substring(6);
+        String[] clientCredentialArray = clientCredential.split(":");
+
         // 2.bodyとheaderの両方にCredencialが含まれていないかチェック（両方あれば401を返す）
         // 3.client_idでclientテーブルから検索（一致するものがなければ401を返す）
         // 4.grant_type=authorization_codeであることを確認
