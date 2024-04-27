@@ -36,4 +36,10 @@ public class ClientController {
         logger.info("redirect:http://localhost:8000/authorize" + uri);
         return "redirect:http://localhost:8000/authorize" + uri;
     }
+
+    @GetMapping("/callback")
+    public String callbackClientEndpoint()
+    {
+        return "index";
+    }
 }

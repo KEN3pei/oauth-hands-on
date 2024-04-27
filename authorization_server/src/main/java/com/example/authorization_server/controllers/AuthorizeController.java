@@ -91,16 +91,11 @@ public class AuthorizeController {
     public String clientAuthEndpoint(@ModelAttribute ClientAuthFormRequest form, RedirectAttributes redirectAttributes) {
         try {
             logger.info("START POST /approve");
-            logger.info(form.getApprove());
-            logger.info(form.getReqId());
-            String[] scopes = form.getScope();
-            for(int i = 0; i < scopes.length ; i++){
-                logger.info(scopes[i]);
-            }
 
             Object[] res = this.approveService.execute(form);
-            String code = (String)res[1];
-            Map<String, String> query = (Map<String, String>)res[2];
+            String code = (String)res[0];
+            Map<String, String> query = (Map<String, String>)res[1];
+            logger.info("<<< CREATE RESPONSE FROM AUTHCODE & QUERY>>>");
 
             Map<String, String> params = new HashMap<String, String>(){
                 {

@@ -39,10 +39,12 @@ public class ApproveService {
         String reqId = request.getReqId();
 
         RequestsRecord requestRecord = this.requestRepository.findByReqId(reqId);
+        logger.info("<<< FIND REQUEST BY reqId :"+ reqId+ " >>>");
         this.requestRepository.delete(reqId);
+        logger.info("<<< DELETE REQUEST >>>");
 
         JSON query = requestRecord.getQuery();
-        logger.info(query.toString());
+        logger.info("<<< PAST JSON REQUEST: "+ query.toString());
 
         Map<String, String> mapQuery = null;
         ObjectMapper mapper = new ObjectMapper();
@@ -55,6 +57,7 @@ public class ApproveService {
 
         String authCode = GenerateUUID.generate();
         this.codeRepository.save(authCode, query);
+        logger.info("<<< SAVE REQUEST QUERY WITH AUTHCODE KEY >>>");
 
         Object[] res = {authCode, mapQuery};
         return res;
