@@ -3,6 +3,7 @@ package com.example.authorization_server.controllers.requests;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+// デシリアライズ時にプロパティが存在しない時にエラーが出ないようにする
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class AuthorizeRequest {
     @JsonProperty("client_id")

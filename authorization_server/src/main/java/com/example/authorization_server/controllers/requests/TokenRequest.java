@@ -3,26 +3,27 @@ package com.example.authorization_server.controllers.requests;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+// デシリアライズ時にプロパティが存在しない時にエラーが出ないようにする
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class TokenRequest {
     @JsonProperty("code")
     private String code;
 
-    @JsonProperty("client_id")
-    private String clientId;
+    @JsonProperty("grant_type")
+    private String grantType;
     
-    @JsonProperty("pass")
-    private String pass;
+    @JsonProperty("redirect_uri")
+    private String redirectUri;
 
     public String getCode() {
         return code;
     }
 
-    public String getClientId() {
-        return clientId;
+    public String getGrantType() {
+        return grantType;
     }
 
-    public String getPass() {
-        return pass;
+    public String getRedirectUri() {
+        return redirectUri;
     }
 }

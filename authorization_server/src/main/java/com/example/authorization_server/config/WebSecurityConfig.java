@@ -18,9 +18,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/authorize").authenticated()
+                // .requestMatchers("/authorize").authenticated()
                 .anyRequest().permitAll()
-            ).formLogin(withDefaults());
+            )
+            .csrf(csrf -> 
+                //csrf対策の適用外とする
+                //TODO:あとで対策する
+                csrf.ignoringRequestMatchers("/token"))
+            .formLogin(withDefaults());
             // 以下にするとカスタムログインページを指定できる
             // .formLogin((form) -> form
 			// 	.loginPage("/hello").permitAll()

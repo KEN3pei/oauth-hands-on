@@ -8,6 +8,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.authorization_server.controllers.requests.AuthorizeRequest;
 import com.example.authorization_server.controllers.requests.ClientAuthFormRequest;
 import com.example.authorization_server.controllers.requests.TokenRequest;
+import com.example.authorization_server.controllers.responses.TokenEndpointResponse;
 import com.example.authorization_server.jooq.tables.records.ClientsRecord;
 import com.example.authorization_server.services.ApproveService;
 import com.example.authorization_server.services.AuthorizeService;
@@ -113,11 +116,13 @@ public class AuthorizeController {
 
     // バックチャネルでクライアントから叩かれるトークン生成エンドポイント
     @PostMapping("/token")
-    public String tokenEndpoint(@RequestBody TokenRequest request, @RequestHeader("Authorization") String auth) {
+    // public String tokenEndpoint(@RequestBody TokenRequest request, @RequestHeader("authorization") String auth) {
+    public ResponseEntity<TokenEndpointResponse> tokenEndpoint(@RequestBody TokenRequest request) {
+        logger.info("START POST /token");
         // 1.Basic認証で渡されたHeader内のIDとPaswordを取得（client_idとclient_secretをHeaderから取得）
         // 「basic client_id:client_secret」から「client_id:client_secret」を切り出す
-        String clientCredential = auth.substring(6);
-        String[] clientCredentialArray = clientCredential.split(":");
+        // String clientCredential = auth.substring(6);
+        // String[] clientCredentialArray = clientCredential.split(":");
 
         // 2.bodyとheaderの両方にCredencialが含まれていないかチェック（両方あれば401を返す）
         // 3.client_idでclientテーブルから検索（一致するものがなければ401を返す）
@@ -125,11 +130,16 @@ public class AuthorizeController {
         // 5.認可コード一時保存テーブルから、リクエストされた認可コードと一致するqueryをDBから取得
         // 6.認可コードレコードに含まれるclient_idとリクエストされたclient_idをチェック（認可コードレコードはこのタイミングで削除）
         // 7.アクセストークンの生成と保存(scopeも一緒に保存)
-        return "authorize";
+        // return "authorize";
         /* 以下をレスポンスに含めて返す
          * access_token: access_token
          * token_type: "Bearer"
          * scope: "foo bar" // 認可コード一時保存テーブルから取得したscope情報を半角区切りで足し合わせた文字列
          */
+        TokenEndpointResponse res = new TokenEndpointResponse();
+        res.setAccessToken("access_token");
+        res.setTokenType("token_type");
+        
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 }
