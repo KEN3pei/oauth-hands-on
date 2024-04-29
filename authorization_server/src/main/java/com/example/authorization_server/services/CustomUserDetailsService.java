@@ -8,18 +8,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.authorization_server.infrastructure.user.UserRepositoryInterface;
+import com.example.authorization_server.infrastructure.user.UserRepository;
 import com.example.authorization_server.jooq.tables.records.UsersRecord;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     
-    private final UserRepositoryInterface userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public CustomUserDetailsService(
-        UserRepositoryInterface userRepository,
+        UserRepository userRepository,
         PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;

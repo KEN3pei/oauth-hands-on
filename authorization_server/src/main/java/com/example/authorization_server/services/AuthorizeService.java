@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.authorization_server.controllers.requests.AuthorizeRequest;
-import com.example.authorization_server.infrastructure.client.ClientRepositoryInterface;
+import com.example.authorization_server.infrastructure.client.ClientRepository;
 import com.example.authorization_server.infrastructure.request.RequestRepository;
 import com.example.authorization_server.jooq.tables.records.ClientsRecord;
 import com.example.authorization_server.services.util.GenerateUUID;
@@ -23,14 +23,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Service
 public class AuthorizeService {
 
-    private final ClientRepositoryInterface clientRepository;
+    private final ClientRepository clientRepository;
     private final RequestRepository requestRepository;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public AuthorizeService(
-        ClientRepositoryInterface clientRepository,
+        ClientRepository clientRepository,
         RequestRepository requestRepository
     ) {
         this.clientRepository = clientRepository;
