@@ -1,12 +1,14 @@
 package com.auth.client.controllers;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,7 +30,9 @@ public class ClientController {
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("access_token", null);
+        model.addAttribute("token_type", null);
         return "index";
     }
 
@@ -51,7 +55,7 @@ public class ClientController {
     }
 
     @GetMapping("/callback")
-    public String callbackClientEndpoint(@RequestParam Map<String, String> params) {
+    public String callbackClientEndpoint(@RequestParam Map<String, String> params, Model model) {
         try {
             logger.info("START GET /callback");
 
@@ -61,6 +65,11 @@ public class ClientController {
 
             TokenEndpointResponse res = tokenService.execute(request);
             logger.info("<<< tokenService.execute >>> ");
+
+            Map<String, Object> token = new HashMap<>();
+            token.put("access_token", res.getAccessToken());
+            token.put("token_type", res.getTokenType());
+            model.addAllAttributes(token);
 
             return "index";
         } catch (Exception e) {

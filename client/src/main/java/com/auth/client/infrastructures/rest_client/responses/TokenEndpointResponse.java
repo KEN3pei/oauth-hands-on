@@ -11,4 +11,12 @@ public class TokenEndpointResponse implements JsonResponseInterface {
 
     @JsonProperty("token_type")
     private String tokenType;
+
+    public String getAccessToken() {
+        return this.accessToken;
+    }
+
+    public String getTokenType() {
+        return this.tokenType;
+    }
 }

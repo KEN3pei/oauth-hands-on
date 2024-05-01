@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.authorization_server.controllers.requests.TokenRequest;
 import com.example.authorization_server.domains.ClientCredencial;
 import com.example.authorization_server.domains.code.CodeQuery;
 import com.example.authorization_server.infrastructure.client.ClientRepository;
@@ -23,7 +24,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.example.authorization_server.controllers.requests.TokenRequest;
 
 @Service
 public class TokenService implements BasicAuthorizationCodeFlow {
