@@ -19,8 +19,8 @@ public class AccessTokenRepository implements AccessTokenRepositoryInterface {
     
     public void save(TokenRecord token)
     {
-        create.insertInto(TOKEN, TOKEN.ACCESS_TOKEN, TOKEN.CLIENT_ID, TOKEN.QUERY)
-            .values(token.getAccessToken(), token.getClientId(), token.getQuery())
+        create.insertInto(TOKEN, TOKEN.ACCESS_TOKEN, TOKEN.CLIENT_ID)
+            .values(token.getAccessToken(), token.getClientId())
             .execute();
     }
 }

@@ -6,7 +6,6 @@ package com.example.authorization_server.jooq.tables.records;
 
 import com.example.authorization_server.jooq.tables.Token;
 
-import org.jooq.JSON;
 import org.jooq.Record1;
 import org.jooq.impl.UpdatableRecordImpl;
 
@@ -47,20 +46,6 @@ public class TokenRecord extends UpdatableRecordImpl<TokenRecord> {
         return (String) get(1);
     }
 
-    /**
-     * Setter for <code>oauth_db.token.query</code>.
-     */
-    public void setQuery(JSON value) {
-        set(2, value);
-    }
-
-    /**
-     * Getter for <code>oauth_db.token.query</code>.
-     */
-    public JSON getQuery() {
-        return (JSON) get(2);
-    }
-
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -84,12 +69,11 @@ public class TokenRecord extends UpdatableRecordImpl<TokenRecord> {
     /**
      * Create a detached, initialised TokenRecord
      */
-    public TokenRecord(String accessToken, String clientId, JSON query) {
+    public TokenRecord(String accessToken, String clientId) {
         super(Token.TOKEN);
 
         setAccessToken(accessToken);
         setClientId(clientId);
-        setQuery(query);
         resetChangedOnNotNull();
     }
 }

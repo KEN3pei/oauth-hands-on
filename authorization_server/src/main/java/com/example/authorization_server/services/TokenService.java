@@ -66,7 +66,6 @@ public class TokenService implements BasicAuthorizationCodeFlow {
         TokenRecord tokenRecord = new TokenRecord();
         tokenRecord.setAccessToken(accessToken);
         tokenRecord.setClientId(credencial.clientId);
-        tokenRecord.setQuery(null);
         this.accessTokenRepository.save(tokenRecord);
 
         return accessToken;
@@ -107,6 +106,19 @@ public class TokenService implements BasicAuthorizationCodeFlow {
         ObjectMapper mapper = new ObjectMapper();
         codeQuery = mapper.readValue(query.toString(), new TypeReference<CodeQuery>(){});
 
-       return codeQuery.clientId.equals(clientId);
+        // リクエストしたcodeが有効であるか確認
+        // if (!codeQuery.expiredAt > now) {
+        //   今はこのようなカラムはない
+        // }
+
+        // 認可コードの削除
+        this.codeRepository.delete(code);
+
+        // リクエストしたcodeの所有者が適切か確認
+        if (!codeQuery.clientId.equals(clientId)) {
+            return false;
+        }
+
+       return true;
     }
 }

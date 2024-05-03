@@ -12,7 +12,6 @@ import java.util.Collection;
 
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.JSON;
 import org.jooq.Name;
 import org.jooq.PlainSQL;
 import org.jooq.QueryPart;
@@ -59,11 +58,6 @@ public class Token extends TableImpl<TokenRecord> {
      * The column <code>oauth_db.token.client_id</code>.
      */
     public final TableField<TokenRecord, String> CLIENT_ID = createField(DSL.name("client_id"), SQLDataType.VARCHAR(100).nullable(false), this, "");
-
-    /**
-     * The column <code>oauth_db.token.query</code>.
-     */
-    public final TableField<TokenRecord, JSON> QUERY = createField(DSL.name("query"), SQLDataType.JSON, this, "");
 
     private Token(Name alias, Table<TokenRecord> aliased) {
         this(alias, aliased, (Field<?>[]) null, null);
