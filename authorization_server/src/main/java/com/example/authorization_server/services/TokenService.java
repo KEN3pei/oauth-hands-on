@@ -18,8 +18,8 @@ import com.example.authorization_server.jooq.tables.records.ClientsRecord;
 import com.example.authorization_server.jooq.tables.records.CodesRecord;
 import com.example.authorization_server.jooq.tables.records.TokenRecord;
 import com.example.authorization_server.services.specification.BasicAuthorizationCodeFlow;
-import com.example.authorization_server.services.util.GenerateAccessToken;
 import com.example.authorization_server.services.util.PasswordValidator;
+import com.example.authorization_server.utils.RsaJwtProducer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -30,17 +30,20 @@ public class TokenService implements BasicAuthorizationCodeFlow {
     private final ClientRepository clientRepository;
     private final CodeRepository codeRepository;
     private final AccessTokenRepository accessTokenRepository;
+    private final RsaJwtProducer rsaJwtProducer;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public TokenService(
         ClientRepository clientRepository,
         CodeRepository codeRepository,
-        AccessTokenRepository accessTokenRepository
+        AccessTokenRepository accessTokenRepository,
+        RsaJwtProducer rsaJwtProducer
     ) {
         this.clientRepository = clientRepository;
         this.codeRepository = codeRepository;
         this.accessTokenRepository = accessTokenRepository;
+        this.rsaJwtProducer = rsaJwtProducer;
     }
 
     public String execute(ClientCredencial credencial, TokenRequest request) throws Exception
@@ -62,7 +65,9 @@ public class TokenService implements BasicAuthorizationCodeFlow {
             throw new Exception("invalid request by user");
         }
         // access_tokenの生成と保存
-        String accessToken = GenerateAccessToken.generate();
+        String accessToken = this.rsaJwtProducer.generateToken();
+        logger.info("accessToken: " + accessToken);
+
         TokenRecord tokenRecord = new TokenRecord();
         tokenRecord.setAccessToken(accessToken);
         tokenRecord.setClientId(credencial.clientId);

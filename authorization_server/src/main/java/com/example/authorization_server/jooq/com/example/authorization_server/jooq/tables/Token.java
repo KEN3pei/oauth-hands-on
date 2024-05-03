@@ -52,7 +52,7 @@ public class Token extends TableImpl<TokenRecord> {
     /**
      * The column <code>oauth_db.token.access_token</code>.
      */
-    public final TableField<TokenRecord, String> ACCESS_TOKEN = createField(DSL.name("access_token"), SQLDataType.VARCHAR(300).nullable(false), this, "");
+    public final TableField<TokenRecord, String> ACCESS_TOKEN = createField(DSL.name("access_token"), SQLDataType.VARCHAR(500).nullable(false), this, "");
 
     /**
      * The column <code>oauth_db.token.client_id</code>.
