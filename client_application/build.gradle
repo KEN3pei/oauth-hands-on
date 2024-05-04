@@ -1,0 +1,66 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id "org.jooq.jooq-codegen-gradle" version "3.19.1"
+}
+
+group = 'com.auth'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+	implementation 'org.jooq:jooq:3.19.1'
+	implementation 'org.jooq:jooq-meta:3.19.1'
+	implementation 'org.jooq.jooq-codegen-gradle:org.jooq.jooq-codegen-gradle.gradle.plugin:3.19.1'
+	implementation 'org.springframework.boot:spring-boot-starter-jooq'
+	jooqCodegen 'com.mysql:mysql-connector-j:8.1.0'
+	implementation 'com.mysql:mysql-connector-j:8.1.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// -Pdb="dbHost dbUser dbPass"
+def db = project.db.split('\\s+')
+def dbHost = db[0]
+def dbUser = db[1]
+def dbPass = db[2]
+
+// task:jooqCodegen
+jooq {
+	version = '3.19.1'
+    configuration {
+		jdbc {
+			driver = "com.mysql.cj.jdbc.Driver"
+			url = "jdbc:mysql://${dbHost}:3307/oauth_client_db?protocol=tcp"
+			user = dbUser
+			password = dbPass
+		}
+		generator {
+			database {
+				name = "org.jooq.meta.mysql.MySQLDatabase"
+				inputSchema = "oauth_client_db"
+				includes = ".*"
+				excludes = ""
+			}
+			target {
+				packageName = "com.auth.client_application.jooq"
+				directory = "src/main/java"
+			}
+		}
+	}	
+}
