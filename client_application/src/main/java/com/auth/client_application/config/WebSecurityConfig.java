@@ -1,5 +1,7 @@
 package com.auth.client_application.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,14 +18,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests((authz) -> authz
-                .requestMatchers("/user").authenticated()
+                .requestMatchers("/user", "/", "/callback", "/authorize").authenticated()
                 .anyRequest().permitAll()
-            );
+            )
             // .csrf(csrf -> 
                 //csrf対策の適用外とする
                 //TODO:あとで対策する
                 // csrf.ignoringRequestMatchers("/token"))
-            // .formLogin(withDefaults());
+            .formLogin(withDefaults());
             // 以下にするとカスタムログインページを指定できる
             // .formLogin((form) -> form
 			// 	.loginPage("/hello").permitAll()

@@ -74,6 +74,20 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
         return (String) get(3);
     }
 
+    /**
+     * Setter for <code>oauth_client_db.users.access_token</code>.
+     */
+    public void setAccessToken(String value) {
+        set(4, value);
+    }
+
+    /**
+     * Getter for <code>oauth_client_db.users.access_token</code>.
+     */
+    public String getAccessToken() {
+        return (String) get(4);
+    }
+
     // -------------------------------------------------------------------------
     // Primary key information
     // -------------------------------------------------------------------------
@@ -97,13 +111,14 @@ public class UsersRecord extends UpdatableRecordImpl<UsersRecord> {
     /**
      * Create a detached, initialised UsersRecord
      */
-    public UsersRecord(String id, String email, String introduce, String password) {
+    public UsersRecord(String id, String email, String introduce, String password, String accessToken) {
         super(Users.USERS);
 
         setId(id);
         setEmail(email);
         setIntroduce(introduce);
         setPassword(password);
+        setAccessToken(accessToken);
         resetChangedOnNotNull();
     }
 }

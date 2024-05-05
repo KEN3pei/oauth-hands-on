@@ -15,25 +15,22 @@ import com.auth.client_application.jooq.tables.records.UsersRecord;
 public class CustomUserDetailsService implements UserDetailsService {
     
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    // private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public CustomUserDetailsService(
-        UserRepository userRepository,
-        PasswordEncoder passwordEncoder
+        UserRepository userRepository
+        // PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        // this.passwordEncoder = passwordEncoder;
     }
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException
     {
         try {
             UsersRecord user = this.userRepository.findByEmail(email);
-            return User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .build();
+            return new CustomUserDetails(user);
         } catch (Exception e) {
             throw new UsernameNotFoundException("ユーザー名かパスワードが間違っています");
         }

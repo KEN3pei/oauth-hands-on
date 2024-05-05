@@ -30,9 +30,24 @@ public class UserRepository implements UserRepositoryInterface {
         }
     }
 
-    public UsersRecord save(Users users) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    public UsersRecord findById(String id) {
+        try {
+            UsersRecord userRecord = create.selectFrom(Users.USERS)
+                    .where(Users.USERS.ID.eq(id))
+                    .fetchOne();
+            return userRecord;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void save(UsersRecord user) {
+        create.update(Users.USERS)
+            .set(Users.USERS.EMAIL, user.getEmail())
+            .set(Users.USERS.INTRODUCE, user.getIntroduce())
+            .set(Users.USERS.ACCESS_TOKEN, user.getAccessToken())
+            .where(Users.USERS.ID.eq(user.getId()))
+            .execute();
     }
 
     public List<UsersRecord> findAll() {
