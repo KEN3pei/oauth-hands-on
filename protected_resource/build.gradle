@@ -17,21 +17,18 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.jooq:jooq:3.19.1'
-	implementation 'org.jooq:jooq-meta:3.19.1'
+	// implementation 'org.jooq:jooq:3.19.1'
+	// implementation 'org.jooq:jooq-meta:3.19.1'
 	// implementation 'org.jooq.jooq-codegen-gradle:org.jooq.jooq-codegen-gradle.gradle.plugin:3.19.1'
-	implementation 'org.springframework.boot:spring-boot-starter-jooq'
-	
+	// implementation 'org.springframework.boot:spring-boot-starter-jooq'
 	// jooqCodegen 'com.mysql:mysql-connector-j:8.0.33'
 	implementation 'com.mysql:mysql-connector-j:8.0.33'
-
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-
 	compileOnly 'org.projectlombok:lombok'
+	implementation 'com.auth0:java-jwt:4.4.0'
 }
 
 tasks.named('test') {
@@ -39,26 +36,26 @@ tasks.named('test') {
 }
 
 
-jooq {
-	version = '3.19.1'
-    configuration {
-		jdbc {
-			driver = "com.mysql.cj.jdbc.Driver"
-			url = "jdbc:mysql://localhost:3306/oauth_db"
-			user = "user"
-			password = "password"
-		}
-		generator {
-			database {
-				name = "org.jooq.meta.mysql.MySQLDatabase"
-				inputSchema = "oauth_db"
-				includes = ".*"
-				excludes = ""
-			}
-			target {
-				packageName = "com.example.protected_resource.jooq"
-				directory = "src/main/java/com/example/protected_resource/jooq"
-			}
-		}
-	}	       
-}
+// jooq {
+// 	version = '3.19.1'
+//     configuration {
+// 		jdbc {
+// 			driver = "com.mysql.cj.jdbc.Driver"
+// 			url = "jdbc:mysql://localhost:3306/oauth_db"
+// 			user = "user"
+// 			password = "password"
+// 		}
+// 		generator {
+// 			database {
+// 				name = "org.jooq.meta.mysql.MySQLDatabase"
+// 				inputSchema = "oauth_db"
+// 				includes = ".*"
+// 				excludes = ""
+// 			}
+// 			target {
+// 				packageName = "com.example.protected_resource.jooq"
+// 				directory = "src/main/java/com/example/protected_resource/jooq"
+// 			}
+// 		}
+// 	}	       
+// }

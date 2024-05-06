@@ -1,53 +1,50 @@
 package com.example.protected_resource.controllers;
 
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.example.protected_resource.controllers.requests.ResourceUpdateRequest;
-import com.example.protected_resource.controllers.responses.IndexUserResponse;
-import com.example.protected_resource.controllers.responses.converters.ListIndexUserResponseConverter;
-import com.example.protected_resource.jooq.tables.records.UsersRecord;
-import com.example.protected_resource.services.UserGetAllService;
-import com.example.protected_resource.services.UserUpdateService;
-
+import com.example.protected_resource.config.EnvProperties;
+import com.example.protected_resource.services.UserGetByTokenService;
+import com.example.protected_resource.controllers.responses.ClientFromTokenResponse;
 
 @RestController
 public class ResourceController {
-    private final UserUpdateService userUpdateService;
-    private final UserGetAllService userGetAllService;
+    private final EnvProperties envProperties;
+    private final UserGetByTokenService userGetByTokenService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ResourceController(
-        UserUpdateService userUpdateService,
-        UserGetAllService userGetAllService
+        EnvProperties envProperties,
+        UserGetByTokenService userGetByTokenService
     ) {
-        this.userUpdateService = userUpdateService;
-        this.userGetAllService = userGetAllService;
+        this.envProperties = envProperties;
+        this.userGetByTokenService = userGetByTokenService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<IndexUserResponse>> index() {
+    // @GetMapping("/")
+    // public ResponseEntity<List<IndexUserResponse>> index() {
 
-        List<UsersRecord> users = this.userGetAllService.execute();
-        List<IndexUserResponse> responseUsers = ListIndexUserResponseConverter.toResponse(users);
-        return new ResponseEntity<List<IndexUserResponse>>(responseUsers, HttpStatus.OK);
-    }
+    //     List<UsersRecord> users = this.userGetAllService.execute();
+    //     List<IndexUserResponse> responseUsers = ListIndexUserResponseConverter.toResponse(users);
+    //     return new ResponseEntity<List<IndexUserResponse>>(responseUsers, HttpStatus.OK);
+    // }
 
-    // introduce更新API
-    @PutMapping("/users/{id}")
-    public String update(
-        @PathVariable String id,
-        @RequestBody ResourceUpdateRequest body
-    ) {
-        this.userUpdateService.execute(id, body.getIntroduce());
-        return "ok";
+    // アクセストークンでユーザー情報を取得するAPI
+    @GetMapping("/user")
+    public ResponseEntity<ClientFromTokenResponse> user(@RequestHeader("authorization") String auth) {
+        String tokenStr = auth.replace("Bearer ", "");
+        logger.info("authorization Header: " + tokenStr);
+
+        ClientFromTokenResponse respose = this.userGetByTokenService.execute(tokenStr);
+        logger.info("ClientFromTokenResponse: " + respose.toString());
+
+        return new ResponseEntity<ClientFromTokenResponse>(respose, HttpStatus.OK);
     }
 }
