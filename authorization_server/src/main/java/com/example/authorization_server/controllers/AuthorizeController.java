@@ -136,7 +136,7 @@ public class AuthorizeController {
         logger.info(clientCredentialArray[1]);
 
         ClientCredencial credencial = new ClientCredencial(
-            clientCredentialArray[0], 
+            clientCredentialArray[0],
             clientCredentialArray[1]
         );
         try {

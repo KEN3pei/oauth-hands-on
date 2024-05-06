@@ -14,12 +14,12 @@ import com.example.authorization_server.domains.code.CodeQuery;
 import com.example.authorization_server.infrastructure.client.ClientRepository;
 import com.example.authorization_server.infrastructure.code.CodeRepository;
 import com.example.authorization_server.infrastructure.token.AccessTokenRepository;
-import com.example.authorization_server.jooq.tables.records.ClientsRecord;
-import com.example.authorization_server.jooq.tables.records.CodesRecord;
-import com.example.authorization_server.jooq.tables.records.TokenRecord;
+import com.example.authorization_server.jooq.com.example.authorization_server.jooq.tables.records.ClientsRecord;
+import com.example.authorization_server.jooq.com.example.authorization_server.jooq.tables.records.CodesRecord;
+import com.example.authorization_server.jooq.com.example.authorization_server.jooq.tables.records.TokenRecord;
 import com.example.authorization_server.services.specification.BasicAuthorizationCodeFlow;
+import com.example.authorization_server.services.util.GenerateAccessToken;
 import com.example.authorization_server.services.util.PasswordValidator;
-import com.example.authorization_server.utils.RsaJwtProducer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -30,24 +30,19 @@ public class TokenService implements BasicAuthorizationCodeFlow {
     private final ClientRepository clientRepository;
     private final CodeRepository codeRepository;
     private final AccessTokenRepository accessTokenRepository;
-    private final RsaJwtProducer rsaJwtProducer;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public TokenService(
-        ClientRepository clientRepository,
-        CodeRepository codeRepository,
-        AccessTokenRepository accessTokenRepository,
-        RsaJwtProducer rsaJwtProducer
-    ) {
+            ClientRepository clientRepository,
+            CodeRepository codeRepository,
+            AccessTokenRepository accessTokenRepository) {
         this.clientRepository = clientRepository;
         this.codeRepository = codeRepository;
         this.accessTokenRepository = accessTokenRepository;
-        this.rsaJwtProducer = rsaJwtProducer;
     }
 
-    public String execute(ClientCredencial credencial, TokenRequest request) throws Exception
-    {
+    public String execute(ClientCredencial credencial, TokenRequest request) throws Exception {
         // クライアント認証
         if (!this.basicAttempt(credencial)) {
             throw new Exception("unauthentication user");
@@ -65,9 +60,7 @@ public class TokenService implements BasicAuthorizationCodeFlow {
             throw new Exception("invalid request by user");
         }
         // access_tokenの生成と保存
-        String accessToken = this.rsaJwtProducer.generateToken();
-        logger.info("accessToken: " + accessToken);
-
+        String accessToken = GenerateAccessToken.generate();
         TokenRecord tokenRecord = new TokenRecord();
         tokenRecord.setAccessToken(accessToken);
         tokenRecord.setClientId(credencial.clientId);
@@ -80,7 +73,7 @@ public class TokenService implements BasicAuthorizationCodeFlow {
         Optional<ClientsRecord> optClient = this.clientRepository.findByClientId(credencial.clientId);
         ClientsRecord client;
         // clientがそもそも存在するか
-        if (optClient.isPresent()){
+        if (optClient.isPresent()) {
             client = optClient.get();
             logger.info("<<< FIND CLIENT BY ID >>>");
             logger.info(client.getClientId());
@@ -89,9 +82,8 @@ public class TokenService implements BasicAuthorizationCodeFlow {
         }
         // clientのpasswordが一致するか
         return (new PasswordValidator()).hashMatch(
-            credencial.clientSecret, 
-            client.getSecret()
-        );
+                credencial.clientSecret,
+                client.getSecret());
     }
 
     public boolean isDuplicateAuthenticationMethods() {
@@ -103,17 +95,19 @@ public class TokenService implements BasicAuthorizationCodeFlow {
         return grantType.equals("authorization_code");
     }
 
-    public boolean authCodeValidation(String code, String clientId) throws JsonMappingException, JsonProcessingException {
+    public boolean authCodeValidation(String code, String clientId)
+            throws JsonMappingException, JsonProcessingException {
         CodesRecord codeRecord = this.codeRepository.findByCode(code);
 
         JSON query = codeRecord.getQuery();
         CodeQuery codeQuery = null;
         ObjectMapper mapper = new ObjectMapper();
-        codeQuery = mapper.readValue(query.toString(), new TypeReference<CodeQuery>(){});
+        codeQuery = mapper.readValue(query.toString(), new TypeReference<CodeQuery>() {
+        });
 
         // リクエストしたcodeが有効であるか確認
         // if (!codeQuery.expiredAt > now) {
-        //   今はこのようなカラムはない
+        // 今はこのようなカラムはない
         // }
 
         // 認可コードの削除
@@ -124,6 +118,6 @@ public class TokenService implements BasicAuthorizationCodeFlow {
             return false;
         }
 
-       return true;
+        return true;
     }
 }

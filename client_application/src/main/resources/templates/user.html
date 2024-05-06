@@ -26,31 +26,20 @@
   </head>
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">OAuth in Action: <span class="label label-primary">OAuth Client</span></a>
-        </div>
-      </div>
-    </nav>
-
     <div class="container">
 
       <div class="jumbotron">
-		  <p>Access token value: 
-        <div th:if="${access_token}">
-          <p class="label label-danger" th:text="${access_token}"></p>
-        </div>
-      </p>
-      <p>Token Type value: 
-        <div th:if="${token_type}">
-          <p class="label label-danger" th:text="${token_type}"></p>
-        </div>
-      </p>
-		  <!-- <p>Scope value: <span class="label label-danger"><%- scope ? scope : 'NONE' %></span></p> -->
-		  <!-- <p>Refresh token value: <span class="label label-danger"><%- refresh_token ? refresh_token : 'NONE' %></span></p> -->
-		  <a class="btn btn-default" href="/authorize">Get OAuth Token</a> 
-		  <a class="btn btn-default" href="/user">Get Protected Resource</a> 
+        ユーザ情報画面
+        <p>Client ID: 
+          <div th:if="${client_id}">
+            <p th:text="${client_id}"></p>
+          </div>
+        </p>
+        <p>Client Scope: 
+          <div th:if="${scope}">
+            <p th:text="${scope}"></p>
+          </div>
+        </p>
       </div>
 
     </div><!-- /.container -->

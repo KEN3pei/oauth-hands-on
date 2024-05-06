@@ -17,6 +17,11 @@ public class CustomUserDetails implements UserDetails {
         return this.jUser.getId();
     }
 
+    public String getAccessToken()
+    {
+        return this.jUser.getAccessToken();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

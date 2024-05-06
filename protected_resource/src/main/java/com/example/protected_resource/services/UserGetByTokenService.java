@@ -1,8 +1,6 @@
 package com.example.protected_resource.services;
 
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -46,9 +44,8 @@ public class UserGetByTokenService {
 
         logger.info("Decoded JWT Payload: " + payloadJson);
 
-        ArrayList<String> scope = new ArrayList<String>();
         return new ClientFromTokenResponse(
-            (Integer)payloadMap.get("client_id"),
+            String.valueOf(payloadMap.get("client_id")),
             (ArrayList)payloadMap.get("client_scope")
         );
     }
