@@ -1,5 +1,3 @@
--- oauth_db.users definition
-
 CREATE TABLE `users` (
   `id` varchar(10) NOT NULL,
   `email` varchar(100) NOT NULL,

@@ -1,5 +1,5 @@
 CREATE TABLE `token` (
-  `access_token` varchar(300) NOT NULL,
+  `access_token` varchar(500) NOT NULL,
   `client_id` varchar(100) NOT NULL,
   `query` JSON,
   PRIMARY KEY (`access_token`)
