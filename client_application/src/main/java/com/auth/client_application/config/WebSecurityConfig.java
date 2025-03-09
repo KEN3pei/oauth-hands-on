@@ -21,6 +21,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/user", "/", "/callback", "/authorize").authenticated()
                 .anyRequest().permitAll()
             )
+            // TODO: OAuthダンスによってCookieを失うため修正する
             // .csrf(csrf -> 
                 //csrf対策の適用外とする
                 //TODO:あとで対策する

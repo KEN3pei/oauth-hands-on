@@ -27,6 +27,8 @@ public class TokenEndpointClient {
             String clientId,
             String password) throws Exception {
         logger.info("START POST " + this.tokenEndpointUri);
+        logger.info("Header, " + "basic " + clientId + ":" + password);
+
         ResponseEntity<TokenEndpointResponse> response = this.client.post()
                 .uri(this.tokenEndpointUri)
                 .contentType(MediaType.APPLICATION_JSON)

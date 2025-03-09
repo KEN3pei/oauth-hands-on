@@ -90,10 +90,10 @@ public class ClientController {
             token.put("access_token", res.getAccessToken());
             token.put("token_type", res.getTokenType());
             model.addAllAttributes(token);
-
+            logger.info("access_token: " + res.getAccessToken());
+            logger.info("token_type: " + res.getTokenType());
             logger.info("Login userId: " + userDetails.getUserId());
             // access_tokenをログイン中ユーザのidで保存
-            // FIXME: このuserIdを保存先としていいのか不明（調査の必要あり）
             if (null == userDetails.getUserId()) {
                 throw new Exception("unauthorization you should login.");
             }
