@@ -112,10 +112,31 @@ CRUD機能を持つ
 - PUT /edit
 - DELETE /delete
 
+### コード修正
+
+javaのビルド & docker image buildが必要
+
 ## コンテナ起動
 
 ```shell
 $ docker network create local-bridge-mysql
 $ docker compose up -d
+$ docker compose up -d --build
+
+# DBコンテナに入って確認
+$ docker exec -it mysql bash
 ```
 
+### 動作確認手順
+
+1. 画面表示（http://localhost:8002）
+
+2. Login
+   - test1@example.com
+   - password
+
+3. Get OAuth Tokenボタンからトークン取得
+
+4. Approveボタンで認可サーバーに認可
+
+5. Get Protected Resorceボタンからリソース保護サーバのクライアント情報取得
